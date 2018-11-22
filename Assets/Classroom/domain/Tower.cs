@@ -20,11 +20,9 @@ namespace domain
       if (pieces.Count == 0)
       {
         pieces.Push(piece);
-        Debug.Log("Put a piece with weight: " + piece.getWeight());
       }
       else if (pieces.Peek().getWeight() > piece.getWeight())
       {
-        Debug.Log("Put a piece with weight: " + piece.getWeight());
         pieces.Push(piece);
       }
     }
@@ -46,13 +44,34 @@ namespace domain
       int currentPieceIndex = 0;
       foreach (TowerPiece piece in pieces)
       {
-        if (!piece.Equals(otherTower.pieces.ElementAt(currentPieceIndex)))
+        if (!piece.Equals(otherTower.pieces.ElementAt(currentPieceIndex++)))
         {
           return false;
         }
       }
 
       return true;
+    }
+
+    public override string ToString() {
+      string items = "";
+
+      foreach (TowerPiece piece in pieces) {
+        items += piece.ToString() + " ";
+      }
+
+      return "[ " + items + "]";
+    }
+
+    public Tower Clone() {
+      Stack<TowerPiece> piecesCopy = new Stack<TowerPiece>();
+      Tower clone = new Tower();
+
+      foreach (TowerPiece piece in pieces.Reverse()) {
+        clone.putPiece(new TowerPiece(piece.getWeight()));
+      }
+
+      return clone;
     }
   }
 }

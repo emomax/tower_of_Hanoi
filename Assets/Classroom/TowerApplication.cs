@@ -8,18 +8,20 @@ public class TowerApplication : MonoBehaviour {
 
   List<Tower> towers;
 
-  TowerPiece currentlyHeldPiece = null;
+  TowerPiece currentlyHeldPiece = null; // TODO Maybe make a domain representation?
+  private const int DEFAULT_SIZE = 4;
 
-  public TowerApplication() : this(4) { }
+  public TowerApplication() : this(DEFAULT_SIZE) { }
 
   public TowerApplication(int numberOfTowerPieces) {
     towers = new List<Tower>();
 
+    // TODO Clarify these loops
     for (int i = 0; i < numberOfTowerPieces - 1; i++) {
       towers.Add(new Tower());
     }
 
-    for (int i = 0; i < numberOfTowerPieces; i++) {
+    for (int i = numberOfTowerPieces - 1; i >= 0; i--) {
       towers[0].putPiece(new TowerPiece(i));
     }
   }
@@ -37,6 +39,12 @@ public class TowerApplication : MonoBehaviour {
 
   public GameBoardState getCurrentSceneState()
   {
-    return new GameBoardState(towers);
+    List<Tower> towersCopy = new List<Tower>();
+
+    foreach (Tower tower in towers) {
+      towersCopy.Add(tower.Clone());
+    }
+
+    return new GameBoardState(towersCopy);
   }
 }

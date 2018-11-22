@@ -24,5 +24,11 @@ namespace domain
       TowerPiece otherPiece = other as TowerPiece;
       return weight == otherPiece.weight;
     }
+
+
+    public override string ToString()
+    {
+      return "" + weight;
+    }
   }
 }

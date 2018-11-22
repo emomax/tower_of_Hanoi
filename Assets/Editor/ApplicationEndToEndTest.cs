@@ -2,6 +2,9 @@
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
+using System;
+using domain;
+using System.Collections.Generic;
 
 public class ApplicationEndToEndTest
 {
@@ -22,15 +25,102 @@ public class ApplicationEndToEndTest
   }
 
   [Test]
-  public void towerPieceMoved_afterUserInput() {
+  public void towerPieceMoved_afterUserInput()
+  {
     TowerApplication application = new TowerApplication();
-    GameBoardState startState = application.getCurrentSceneState();
+    GameBoardState endState = application.getCurrentSceneState();
+    Debug.Log("endstate: " + endState.ToString());
 
     application.pickUp(0);
     application.putDown(1);
 
-    GameBoardState state = application.getCurrentSceneState();
-    Assert.That(state.Equals(startState));
+    Assert.That(!endState.Equals(application.getCurrentSceneState()));
   }
 
+  [Test]
+  public void finishedGame_whenTowerProperlyStackedFromLeftToRight()
+  {
+    TowerApplication application = new TowerApplication();
+    GameBoardState endState = createEndState();
+
+    // 0 -> 1
+    application.pickUp(0);
+    application.putDown(1);
+
+    // 0 -> 2
+    application.pickUp(0);
+    application.putDown(2);
+
+    // 1 -> 2
+    application.pickUp(1);
+    application.putDown(2);
+
+    // 0 -> 1
+    application.pickUp(0);
+    application.putDown(1);
+
+    // 2 -> 0
+    application.pickUp(2);
+    application.putDown(0);
+
+    // 2 -> 1
+    application.pickUp(2);
+    application.putDown(1);
+
+    // 0 -> 1
+    application.pickUp(0);
+    application.putDown(1);
+
+    // 0 -> 2 - first base to the right
+    application.pickUp(0);
+    application.putDown(2);
+
+    // 1 -> 2
+    application.pickUp(1);
+    application.putDown(2);
+
+    // 1 -> 0
+    application.pickUp(1);
+    application.putDown(0);
+
+    // 2 -> 0
+    application.pickUp(2);
+    application.putDown(0);
+
+    // 1 -> 2 - second base to the right
+    application.pickUp(1);
+    application.putDown(2);
+
+    // 0 -> 1
+    application.pickUp(0);
+    application.putDown(1);
+
+    // 0 -> 2 - third base to the right
+    application.pickUp(0);
+    application.putDown(2);
+
+    // 1 -> 2 - fourth base to the right
+    application.pickUp(1);
+    application.putDown(2);
+
+    Assert.That(application.getCurrentSceneState().Equals(endState));
+  }
+
+  private GameBoardState createEndState()
+  {
+    Tower filledTower = new Tower();
+    filledTower.putPiece(new TowerPiece(3));
+    filledTower.putPiece(new TowerPiece(2));
+    filledTower.putPiece(new TowerPiece(1));
+    filledTower.putPiece(new TowerPiece(0));
+
+    Tower emptyTower = new Tower();
+
+    List<Tower> towers = new List<Tower>();
+    towers.Add(emptyTower);
+    towers.Add(emptyTower);
+    towers.Add(filledTower);
+
+    return new GameBoardState(towers);
+  }
 }

@@ -22,4 +22,15 @@ public class GameBoardState : MonoBehaviour {
 
     return true;
   }
+
+  public override string ToString()
+  {
+    string towersOutput = "";
+
+    foreach (Tower tower in towers) {
+      towersOutput += tower.ToString() + " ";
+    }
+
+    return "{ " + towersOutput + "}";
+  }
 }
