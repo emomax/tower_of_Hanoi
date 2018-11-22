@@ -46,4 +46,22 @@ public class TowerTest
     Assert.That(piece.getWeight() != tower.pickUpTopPiece().getWeight());
   }
 
+  [Test]
+  public void TowerEqualsTest() {
+    Tower anEmptyTower = new Tower();
+    Tower anotherEmptyTower = new Tower();
+
+    Assert.That(anEmptyTower.Equals(anotherEmptyTower));
+  }
+
+  [Test]
+  public void TowerUnequalsTest() {
+    Tower aPopulatedTower = new Tower();
+    Tower aDifferentlyPopulatedTower = new Tower();
+
+    aPopulatedTower.putPiece(new TowerPiece(0));
+    aDifferentlyPopulatedTower.putPiece(new TowerPiece(1));
+
+    Assert.That(!aPopulatedTower.Equals(aDifferentlyPopulatedTower));
+  }
 }
