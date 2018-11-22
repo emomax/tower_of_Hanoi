@@ -30,7 +30,7 @@ public class ApplicationEndToEndTest
     application.putDown(1);
 
     GameBoardState state = application.getCurrentSceneState();
-    Assert.That(state != startState);
+    Assert.That(state.Equals(startState));
   }
 
 }

@@ -8,18 +8,35 @@ public class TowerApplication : MonoBehaviour {
 
   List<Tower> towers;
 
+  TowerPiece currentlyHeldPiece = null;
+
+  public TowerApplication() : this(4) { }
+
+  public TowerApplication(int numberOfTowerPieces) {
+    towers = new List<Tower>();
+
+    for (int i = 0; i < numberOfTowerPieces - 1; i++) {
+      towers.Add(new Tower());
+    }
+
+    for (int i = 0; i < numberOfTowerPieces; i++) {
+      towers[0].putPiece(new TowerPiece(i));
+    }
+  }
+
   public void pickUp(int indexOfTower)
   {
-    throw new NotImplementedException();
+    currentlyHeldPiece = towers[indexOfTower].pickUpTopPiece();
   }
 
   public void putDown(int indexOfTower)
   {
-    throw new NotImplementedException();
+    towers[indexOfTower].putPiece(currentlyHeldPiece);
+    currentlyHeldPiece = null;
   }
 
   public GameBoardState getCurrentSceneState()
   {
-    throw new NotImplementedException();
+    return new GameBoardState(towers);
   }
 }
