@@ -17,8 +17,11 @@ namespace domain
     }
 
     public override bool Equals(object other) {
-      TowerPiece otherPiece = other as TowerPiece;
+      if (other == null) {
+        return false;
+      }
 
+      TowerPiece otherPiece = other as TowerPiece;
       return weight == otherPiece.weight;
     }
   }
