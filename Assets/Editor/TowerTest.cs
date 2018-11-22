@@ -32,4 +32,18 @@ public class TowerTest
 
     Assert.That(piece.getWeight() == tower.pickUpTopPiece().getWeight());
   }
+
+  [Test]
+  public void placingPieceFails_whenCurrentTopPieceIsSmaller()
+  {
+    Tower tower = new Tower();
+    TowerPiece smallPiece = new TowerPiece(0);
+    TowerPiece piece = new TowerPiece(1);
+
+    tower.putPiece(smallPiece);
+    tower.putPiece(piece);
+
+    Assert.That(piece.getWeight() != tower.pickUpTopPiece().getWeight());
+  }
+
 }
