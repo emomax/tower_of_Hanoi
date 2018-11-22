@@ -15,5 +15,11 @@ namespace domain
     public int getWeight() {
       return weight;
     }
+
+    public override bool Equals(object other) {
+      TowerPiece otherPiece = other as TowerPiece;
+
+      return weight == otherPiece.weight;
+    }
   }
 }
