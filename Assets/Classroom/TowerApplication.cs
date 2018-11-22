@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using domain;
 using UnityEngine;
 
 public class TowerApplication : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-
-	}
-
-	// Update is called once per frame
-	void Update () {
-
-	}
+  List<Tower> towers;
 
   public void pickUp(int indexOfTower)
   {
