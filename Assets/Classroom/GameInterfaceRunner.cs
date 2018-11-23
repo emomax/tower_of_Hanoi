@@ -9,6 +9,7 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
   private List<GameInterfaceEventListener> listeners;
 
   int currentTowerIndex = -1;
+  int lastTowerIndex = -1;
 
   public GameInterfaceRunner(TowerApplication application)
   {
@@ -22,10 +23,13 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 
     if (currentPieceIsMovable(weight, currentState))
     {
-      application.pickUp(weight);
+      lastTowerIndex = getTowerIndexForPiece(weight, currentState);
+      application.pickUp(lastTowerIndex);
+
       publishPickedUpEvent(weight);
     }
-    else {
+    else
+    {
       publishCouldNotPickUpPieceEvent(weight);
     }
   }
@@ -40,19 +44,10 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 
   private void publishPickedUpEvent(int weight)
   {
-    foreach (GameInterfaceEventListener listener in listeners) {
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
       listener.piecePickedUp(weight);
     }
-  }
-
-  private bool currentPieceIsMovable(int weight, GameBoardState currentState)
-  {
-    return currentState.canMovePieceWithWeight(weight);
-  }
-
-  public void registerListener(GameInterfaceEventListener listener)
-  {
-    listeners.Add(listener);
   }
 
   public void enteredDropZoneForTower(int towerIndex)
@@ -62,13 +57,41 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 
   public void releaseCurrentInput()
   {
-    application.putDown(currentTowerIndex);
-
-    foreach (GameInterfaceEventListener listener in listeners)
+    if (currentTowerIndex != -1)
     {
-      listener.pieceWasPlacedAtTower(currentTowerIndex);
-    }
+      application.putDown(currentTowerIndex);
 
-    currentTowerIndex = -1;
+      foreach (GameInterfaceEventListener listener in listeners)
+      {
+        listener.pieceWasPlacedAtTower(currentTowerIndex);
+      }
+
+      currentTowerIndex = -1;
+    }
+    else
+    {
+      application.putDown(lastTowerIndex);
+      lastTowerIndex = -1;
+
+      foreach (GameInterfaceEventListener listener in listeners)
+      {
+        listener.pieceWasDroppedOutsideOfDropZone();
+      }
+    }
+  }
+
+  private bool currentPieceIsMovable(int weight, GameBoardState currentState)
+  {
+    return currentState.canMovePieceWithWeight(weight);
+  }
+
+  private int getTowerIndexForPiece(int weight, GameBoardState currentState)
+  {
+    return currentState.getTowerIndexForPiece(weight);
+  }
+
+  public void registerListener(GameInterfaceEventListener listener)
+  {
+    listeners.Add(listener);
   }
 }

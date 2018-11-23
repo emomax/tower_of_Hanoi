@@ -58,6 +58,17 @@ namespace domain
       return pieces.Peek();
     }
 
+    public bool hasPieceWithWeight(int weight)
+    {
+      foreach (TowerPiece piece in pieces) {
+        if (piece.getWeight() == weight) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     public override string ToString() {
       string items = "";
 

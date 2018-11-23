@@ -8,4 +8,5 @@ public abstract class GameInterfaceEventListener : MonoBehaviour {
   public abstract void pieceCouldNotBeMoved(int weight);
 
   public abstract void pieceWasPlacedAtTower(int tower);
+  public abstract void pieceWasDroppedOutsideOfDropZone();
 }

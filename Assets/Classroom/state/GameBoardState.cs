@@ -50,4 +50,17 @@ public class GameBoardState : MonoBehaviour
 
     return false;
   }
+
+  public int getTowerIndexForPiece(int weight)
+  {
+    for (int i = 0; i < towers.Count; i++)
+    {
+      if (towers[i].hasPieceWithWeight(weight))
+      {
+        return i;
+      }
+    }
+
+    throw new UnityException("Piece with weight '" + weight + "' did not exist. WEIRD.");
+  }
 }

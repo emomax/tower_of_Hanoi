@@ -64,4 +64,21 @@ public class TowerTest
 
     Assert.That(!aPopulatedTower.Equals(aDifferentlyPopulatedTower));
   }
+
+  [Test]
+  public void TowerContainsPieceTest() {
+    Tower aPopulatedTower = new Tower();
+
+    aPopulatedTower.putPiece(new TowerPiece(0));
+    aPopulatedTower.putPiece(new TowerPiece(1));
+
+    Assert.That(aPopulatedTower.hasPieceWithWeight(0));
+  }
+
+  [Test]
+  public void TowerDoesNotContainPieceTest()
+  {
+    Tower aPopulatedTower = new Tower();
+    Assert.That(!aPopulatedTower.hasPieceWithWeight(0));
+  }
 }
