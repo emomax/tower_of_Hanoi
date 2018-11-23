@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using domain;
 using UnityEngine;
 
-public class GameBoardState : MonoBehaviour {
+public class GameBoardState : MonoBehaviour
+{
   private List<Tower> towers;
 
   public GameBoardState(List<Tower> towers)
@@ -11,11 +12,14 @@ public class GameBoardState : MonoBehaviour {
     this.towers = towers;
   }
 
-  public override bool Equals(object other) {
+  public override bool Equals(object other)
+  {
     GameBoardState otherState = other as GameBoardState;
 
-    for (int i = 0; i < towers.Count; i++) {
-      if (!towers[i].Equals(otherState.towers[i])) {
+    for (int i = 0; i < towers.Count; i++)
+    {
+      if (!towers[i].Equals(otherState.towers[i]))
+      {
         return false;
       }
     }
@@ -27,7 +31,8 @@ public class GameBoardState : MonoBehaviour {
   {
     string towersOutput = "";
 
-    foreach (Tower tower in towers) {
+    foreach (Tower tower in towers)
+    {
       towersOutput += tower.ToString() + " ";
     }
 

@@ -37,7 +37,7 @@ public class TowerApplication : MonoBehaviour {
     currentlyHeldPiece = null;
   }
 
-  public GameBoardState getCurrentSceneState()
+  public virtual GameBoardState getCurrentSceneState()
   {
     List<Tower> towersCopy = new List<Tower>();
 
