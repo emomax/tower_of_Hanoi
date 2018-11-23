@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using domain;
 using UnityEngine;
@@ -37,5 +38,16 @@ public class GameBoardState : MonoBehaviour
     }
 
     return "{ " + towersOutput + "}";
+  }
+
+  public bool canMovePieceWithWeight(int weight)
+  {
+    foreach (Tower tower in towers) {
+      if (tower.hasPieces() && tower.peekAtTopPiece().getWeight() == weight) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

@@ -53,6 +53,11 @@ namespace domain
       return true;
     }
 
+    public TowerPiece peekAtTopPiece()
+    {
+      return pieces.Peek();
+    }
+
     public override string ToString() {
       string items = "";
 
@@ -72,6 +77,10 @@ namespace domain
       }
 
       return clone;
+    }
+
+    public bool hasPieces() {
+      return pieces.Count() > 0;
     }
   }
 }

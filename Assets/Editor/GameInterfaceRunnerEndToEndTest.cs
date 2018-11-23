@@ -53,6 +53,26 @@ public class GameInterfaceRunnerEndToEndTest
     genericListener.Received().piecePickedUp(0);
   }
 
+  [Test]
+  public void failsToPickUpPiece_whenTouchingPieceIsNotTop()
+  {
+    // This is a substitute for possibly a sound handler, graphics handler, data collection system etc.
+    GameInterfaceEventListener genericListener = Substitute.For<GameInterfaceEventListener>();
+
+    InputManager input = new MockInputManager();
+    TowerApplication application = Substitute.For<TowerApplication>();
+    application.getCurrentSceneState().Returns(startState);
+
+    GameInterfaceRunner interfaceRunner = new GameInterfaceRunner(application);
+    interfaceRunner.registerListener(genericListener);
+
+    input.registerListener(interfaceRunner);
+    input.touchPiece(1);
+
+    application.DidNotReceive().pickUp(Arg.Any<int>());
+    genericListener.Received().pieceCouldNotBeMoved(1);
+  }
+
   private class MockInputManager : InputManager
   {
     private List<InputSubscriber> subscribers;

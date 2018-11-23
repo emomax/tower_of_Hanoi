@@ -46,7 +46,7 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 
   private bool currentPieceIsMovable(int weight, GameBoardState currentState)
   {
-    return true;
+    return currentState.canMovePieceWithWeight(weight);
   }
 
   public void registerListener(GameInterfaceEventListener listener)
