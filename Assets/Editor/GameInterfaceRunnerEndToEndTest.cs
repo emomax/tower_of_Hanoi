@@ -54,14 +54,37 @@ public class GameInterfaceRunnerEndToEndTest
   }
 
   [Test]
+  public void pieceChangesTower_whenPickingAndMovingTopPieceOfATower()
+  {
+    // This is a substitute for possibly a sound handler, graphics handler, data collection system etc.
+    GameInterfaceEventListener genericListener = Substitute.For<GameInterfaceEventListener>();
+
+    InputManager input = new MockInputManager();
+    TowerApplication application = new TowerApplication();
+    GameBoardState startState = application.getCurrentSceneState();
+
+    GameInterfaceRunner interfaceRunner = new GameInterfaceRunner(application);
+    interfaceRunner.registerListener(genericListener);
+
+    input.registerListener(interfaceRunner);
+    input.touchPiece(0);
+    input.enteredDropZoneForTower(1);
+    input.releaseCurrentInput();
+
+    genericListener.Received().piecePickedUp(0);
+    genericListener.Received().pieceWasPlacedAtTower(1);
+
+    Assert.That(!application.getCurrentSceneState().Equals(startState));
+  }
+
+  [Test]
   public void failsToPickUpPiece_whenTouchingPieceIsNotTop()
   {
     // This is a substitute for possibly a sound handler, graphics handler, data collection system etc.
     GameInterfaceEventListener genericListener = Substitute.For<GameInterfaceEventListener>();
 
     InputManager input = new MockInputManager();
-    TowerApplication application = Substitute.For<TowerApplication>();
-    application.getCurrentSceneState().Returns(startState);
+    TowerApplication application = new TowerApplication();
 
     GameInterfaceRunner interfaceRunner = new GameInterfaceRunner(application);
     interfaceRunner.registerListener(genericListener);
@@ -69,7 +92,6 @@ public class GameInterfaceRunnerEndToEndTest
     input.registerListener(interfaceRunner);
     input.touchPiece(1);
 
-    application.DidNotReceive().pickUp(Arg.Any<int>());
     genericListener.Received().pieceCouldNotBeMoved(1);
   }
 
@@ -85,6 +107,22 @@ public class GameInterfaceRunnerEndToEndTest
     public override void registerListener(InputSubscriber listener)
     {
       subscribers.Add(listener);
+    }
+
+    public override void enteredDropZoneForTower(int towerIndex)
+    {
+      foreach (InputSubscriber subscriber in subscribers)
+      {
+        subscriber.enteredDropZoneForTower(towerIndex);
+      }
+    }
+
+    public override void releaseCurrentInput()
+    {
+      foreach (InputSubscriber subscriber in subscribers)
+      {
+        subscriber.releaseCurrentInput();
+      }
     }
 
     public override void touchPiece(int weight)

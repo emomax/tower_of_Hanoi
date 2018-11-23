@@ -6,8 +6,9 @@ using UnityEngine;
 public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 {
   private TowerApplication application;
-
   private List<GameInterfaceEventListener> listeners;
+
+  int currentTowerIndex = -1;
 
   public GameInterfaceRunner(TowerApplication application)
   {
@@ -52,5 +53,22 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
   public void registerListener(GameInterfaceEventListener listener)
   {
     listeners.Add(listener);
+  }
+
+  public void enteredDropZoneForTower(int towerIndex)
+  {
+    currentTowerIndex = towerIndex;
+  }
+
+  public void releaseCurrentInput()
+  {
+    application.putDown(currentTowerIndex);
+
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.pieceWasPlacedAtTower(currentTowerIndex);
+    }
+
+    currentTowerIndex = -1;
   }
 }

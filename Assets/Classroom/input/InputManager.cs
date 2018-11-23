@@ -8,4 +8,6 @@ public abstract class InputManager : MonoBehaviour
 {
   public abstract void registerListener(InputSubscriber listener);
   public abstract void touchPiece(int weight);
+  public abstract void enteredDropZoneForTower(int towerIndex);
+  public abstract void releaseCurrentInput();
 }
