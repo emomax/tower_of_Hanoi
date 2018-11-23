@@ -34,18 +34,23 @@ public class GameInterfaceRunnerEndToEndTest
   }
 
   [Test]
-  public void picksUpPiece_whenPickingTopPieceOfATower ()
+  public void picksUpPiece_whenPickingTopPieceOfATower()
   {
+    // This is a substitute for possibly a sound handler, graphics handler, data collection system etc.
+    GameInterfaceEventListener genericListener = Substitute.For<GameInterfaceEventListener>();
+
     InputManager input = new MockInputManager();
     TowerApplication application = Substitute.For<TowerApplication>();
     application.getCurrentSceneState().Returns(startState);
 
     GameInterfaceRunner interfaceRunner = new GameInterfaceRunner(application);
+    interfaceRunner.registerListener(genericListener);
 
     input.registerListener(interfaceRunner);
     input.touchPiece(0);
 
     application.Received().pickUp(0);
+    genericListener.Received().piecePickedUp(0);
   }
 
   private class MockInputManager : InputManager
