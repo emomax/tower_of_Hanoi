@@ -6,7 +6,7 @@ namespace domain
 {
   public class TowerPiece : MonoBehaviour
   {
-    private readonly int weight;
+    [SerializeField] private int weight;
 
     public TowerPiece(int weight) {
       this.weight = weight;

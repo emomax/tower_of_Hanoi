@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 {
-  private TowerApplication application;
+  [SerializeField] private TowerApplication application;
   private List<GameInterfaceEventListener> listeners;
 
   int currentTowerIndex = -1;
@@ -15,6 +15,13 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
   {
     this.application = application;
     this.listeners = new List<GameInterfaceEventListener>();
+  }
+
+  public void Awake() {
+    listeners = new List<GameInterfaceEventListener>();
+
+    currentTowerIndex = -1;
+    lastTowerIndex = -1;
   }
 
   public void touchedPiece(int weight)
@@ -34,24 +41,13 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     }
   }
 
-  private void publishCouldNotPickUpPieceEvent(int weight)
-  {
-    foreach (GameInterfaceEventListener listener in listeners)
-    {
-      listener.pieceCouldNotBeMoved(weight);
-    }
-  }
-
-  private void publishPickedUpEvent(int weight)
-  {
-    foreach (GameInterfaceEventListener listener in listeners)
-    {
-      listener.piecePickedUp(weight);
-    }
-  }
-
   public void releaseCurrentInput()
   {
+    if (lastTowerIndex == -1)
+    { // Didn't have any piece attached to pointer
+      return;
+    }
+
     if (currentTowerIndex != -1)
     {
       application.putDown(currentTowerIndex);
@@ -83,6 +79,22 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
   public void leftDropZone()
   {
     currentTowerIndex = -1;
+  }
+
+  private void publishCouldNotPickUpPieceEvent(int weight)
+  {
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.pieceCouldNotBeMoved(weight);
+    }
+  }
+
+  private void publishPickedUpEvent(int weight)
+  {
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.piecePickedUp(weight);
+    }
   }
 
   private bool currentPieceIsMovable(int weight, GameBoardState currentState)
