@@ -15,16 +15,26 @@ namespace domain
       pieces = new Stack<TowerPiece>();
     }
 
-    public void putPiece(TowerPiece piece)
+    /*
+     * Attempts to put the given piece on the stack.
+     * Returns true if the current top piece is bigger, otherwise false.
+     *
+     * I'm not a big fan of this logic.. May revisit this in the future.
+     */
+    public bool putPiece(TowerPiece piece)
     {
       if (pieces.Count == 0)
       {
         pieces.Push(piece);
+        return true;
       }
       else if (pieces.Peek().getWeight() > piece.getWeight())
       {
         pieces.Push(piece);
+        return true;
       }
+
+      return false;
     }
 
     public TowerPiece pickUpTopPiece()
@@ -77,6 +87,11 @@ namespace domain
       }
 
       return "[ " + items + "]";
+    }
+
+    public int getNumberOfPieces()
+    {
+      return pieces.Count;
     }
 
     public Tower Clone() {

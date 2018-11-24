@@ -9,6 +9,21 @@ public class SoundHandler : GameInterfaceEventListener
     // Play denied sound
   }
 
+  public override void pieceCouldNotBePlaced(int currentTowerIndex)
+  {
+    // Denied, in a grumpy way!
+  }
+
+  public override void pieceHoveredDropZone(int tower)
+  {
+    // Ignore?
+  }
+
+  public override void pieceLeftDropZone(int tower)
+  {
+    // Ignore?
+  }
+
   public override void piecePickedUp(int weight)
   {
     // Play happy picked up sound

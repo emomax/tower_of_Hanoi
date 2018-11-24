@@ -63,4 +63,9 @@ public class GameBoardState : MonoBehaviour
 
     throw new UnityException("Piece with weight '" + weight + "' did not exist. WEIRD.");
   }
+
+  public int getNumberOfPiecesForTower(int tower)
+  {
+    return towers[tower].getNumberOfPieces();
+  }
 }

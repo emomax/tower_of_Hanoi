@@ -10,20 +10,34 @@ public class GraphicsHandler : GameInterfaceEventListener
   [SerializeField] private TowerPiece big;
   [SerializeField] private TowerPiece biggest;
 
-  TowerPiece currentPiece;
-  private Vector2 pieceStartPosition;
+  // In order to find new positions
+  [SerializeField] private TowerApplication application;
 
+  TowerPiece currentPiece;
+
+  private Vector2 pieceStartPosition;
   private List<TowerPiece> pieces;
 
-  public GraphicsHandler() {
+  private int currentTower = -1;
+  private List<Vector2> dropZonePosition;
+
+  public GraphicsHandler()
+  {
     pieces = populateList();
   }
 
-  public void Awake() {
+  public void Awake()
+  {
     pieces = populateList();
+    currentTower = -1;
+    dropZonePosition = new List<Vector2>();
+    dropZonePosition.Add(new Vector2(-246f, 214f));
+    dropZonePosition.Add(new Vector2(5f, 214f));
+    dropZonePosition.Add(new Vector2(246f, 214f));
   }
 
-  private List<TowerPiece> populateList() {
+  private List<TowerPiece> populateList()
+  {
     List<TowerPiece> pieces = new List<TowerPiece>();
     pieces.Add(smallest);
     pieces.Add(small);
@@ -35,7 +49,17 @@ public class GraphicsHandler : GameInterfaceEventListener
 
   public override void pieceCouldNotBeMoved(int weight)
   {
-    // TODO
+    // TODO wiggle clicked piece;
+  }
+
+  public override void pieceHoveredDropZone(int tower)
+  {
+    currentTower = tower;
+  }
+
+  public override void pieceLeftDropZone(int tower)
+  {
+    currentTower = -1;
   }
 
   public override void piecePickedUp(int weight)
@@ -52,15 +76,36 @@ public class GraphicsHandler : GameInterfaceEventListener
 
   public override void pieceWasPlacedAtTower(int tower)
   {
+    GameBoardState state = application.getCurrentSceneState();
+    currentPiece.transform.localPosition = getPositionAtNewTower(state, tower);
+    currentPiece = null;
     // TODO
   }
 
-  public void Update() {
-    if (Input.GetMouseButton(0)) {
-      if (currentPiece != null) {
+  public void Update()
+  {
+    if (currentPiece != null)
+    {
+      if (currentTower != -1) {
+        currentPiece.transform.localPosition = dropZonePosition[currentTower];
+      }
+      else if (Input.GetMouseButton(0))
+      {
         Vector2 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         currentPiece.transform.position = newPosition;
       }
     }
+  }
+
+  private Vector2 getPositionAtNewTower(GameBoardState state, int tower) {
+    int numberOfPieces = state.getNumberOfPiecesForTower(tower);
+    const int PIECE_HEIGHT = 65;
+
+    return new Vector2(dropZonePosition[tower].x, -120 + (PIECE_HEIGHT * (numberOfPieces - 1)));
+  }
+
+  public override void pieceCouldNotBePlaced(int currentTowerIndex)
+  {
+    // Play smoke poof? Aggrevated lower pieces?
   }
 }

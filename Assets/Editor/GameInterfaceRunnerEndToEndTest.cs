@@ -106,6 +106,35 @@ public class GameInterfaceRunnerEndToEndTest
   }
 
   [Test]
+  public void pieceIsReturned_whenPickedUpAndMovedToTowerWithLighterTopPiece()
+  {
+    // This is a substitute for possibly a sound handler, graphics handler, data collection system etc.
+    GameInterfaceEventListener genericListener = Substitute.For<GameInterfaceEventListener>();
+
+    InputManager input = new MockInputManager();
+    TowerApplication application = new TowerApplication();
+    GameBoardState startState = application.getCurrentSceneState();
+
+    GameInterfaceRunner interfaceRunner = new GameInterfaceRunner(application);
+    interfaceRunner.registerListener(genericListener);
+
+    input.registerListener(interfaceRunner);
+
+    input.touchPiece(0);
+    input.enteredDropZoneForTower(1);
+    input.releaseCurrentInput();
+
+    input.touchPiece(1);
+    input.enteredDropZoneForTower(1);
+    input.releaseCurrentInput();
+
+    genericListener.Received(1).piecePickedUp(0);
+    genericListener.Received(1).piecePickedUp(1);
+    genericListener.Received(1).pieceWasPlacedAtTower(1);
+    genericListener.Received(1).pieceWasPlacedAtTower(0);
+  }
+
+  [Test]
   public void pickedUpPieceReturns_whenPickingAndMovingTopPieceOutsideOfAnyDropZone()
   {
     // This is a substitute for possibly a sound handler, graphics handler, data collection system etc.

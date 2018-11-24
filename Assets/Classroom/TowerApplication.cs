@@ -31,10 +31,15 @@ public class TowerApplication : MonoBehaviour {
     currentlyHeldPiece = towers[indexOfTower].pickUpTopPiece();
   }
 
-  public void putDown(int indexOfTower)
+  public bool putDown(int indexOfTower)
   {
-    towers[indexOfTower].putPiece(currentlyHeldPiece);
-    currentlyHeldPiece = null;
+    bool couldPlacePiece = towers[indexOfTower].putPiece(currentlyHeldPiece);
+
+    if (couldPlacePiece) {
+      currentlyHeldPiece = null;
+    }
+
+    return couldPlacePiece;
   }
 
   public virtual GameBoardState getCurrentSceneState()

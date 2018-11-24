@@ -10,6 +10,7 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 
   int currentTowerIndex = -1;
   int lastTowerIndex = -1;
+  bool currentlyHoldingPiece = false;
 
   public GameInterfaceRunner(TowerApplication application)
   {
@@ -17,7 +18,8 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     this.listeners = new List<GameInterfaceEventListener>();
   }
 
-  public void Awake() {
+  public void Awake()
+  {
     listeners = new List<GameInterfaceEventListener>();
 
     currentTowerIndex = -1;
@@ -32,6 +34,7 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     {
       lastTowerIndex = getTowerIndexForPiece(weight, currentState);
       application.pickUp(lastTowerIndex);
+      currentlyHoldingPiece = true;
 
       publishPickedUpEvent(weight);
     }
@@ -41,16 +44,28 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     }
   }
 
+  // TODO this is .. very long. Break this up.
   public void releaseCurrentInput()
   {
-    if (lastTowerIndex == -1)
+    if (!currentlyHoldingPiece)
     { // Didn't have any piece attached to pointer
       return;
     }
 
     if (currentTowerIndex != -1)
     {
-      application.putDown(currentTowerIndex);
+      bool couldPlacePiece = application.putDown(currentTowerIndex);
+
+      if (!couldPlacePiece)
+      {
+        application.putDown(lastTowerIndex);
+        currentTowerIndex = lastTowerIndex;
+
+        foreach (GameInterfaceEventListener listener in listeners)
+        {
+          listener.pieceCouldNotBePlaced(lastTowerIndex);
+        }
+      }
 
       foreach (GameInterfaceEventListener listener in listeners)
       {
@@ -58,6 +73,7 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
       }
 
       currentTowerIndex = -1;
+      lastTowerIndex = -1;
     }
     else
     {
@@ -69,15 +85,32 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
         listener.pieceWasDroppedOutsideOfDropZone();
       }
     }
+
+    currentlyHoldingPiece = false;
   }
 
   public void enteredDropZoneForTower(int towerIndex)
   {
     currentTowerIndex = towerIndex;
+
+    if (currentlyHoldingPiece)
+    {
+      foreach (GameInterfaceEventListener listener in listeners)
+      {
+        listener.pieceHoveredDropZone(towerIndex);
+      }
+    }
   }
 
   public void leftDropZone()
   {
+    if (currentlyHoldingPiece)
+    {
+      foreach (GameInterfaceEventListener listener in listeners)
+      {
+        listener.pieceLeftDropZone(currentTowerIndex);
+      }
+    }
     currentTowerIndex = -1;
   }
 
