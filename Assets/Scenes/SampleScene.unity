@@ -492,6 +492,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
+  backside: {fileID: 2110257276}
+  frontside: {fileID: 1065034928}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -804,6 +806,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 3
+  backside: {fileID: 955023367}
+  frontside: {fileID: 20418088}
 --- !u!1 &809575529
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,6 +998,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 2
+  backside: {fileID: 1923519707}
+  frontside: {fileID: 809575531}
 --- !u!1 &894278447
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,6 +1779,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
+  backside: {fileID: 1178883552}
+  frontside: {fileID: 553409341}
 --- !u!1 &1551355494
 GameObject:
   m_ObjectHideFlags: 0

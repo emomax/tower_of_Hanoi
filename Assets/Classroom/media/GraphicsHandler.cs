@@ -58,23 +58,27 @@ public class GraphicsHandler : GameInterfaceEventListener
   {
     currentTower = tower;
     animationStartTime = Time.time;
+    currentPiece.shownAsOnTopOfPillar();
   }
 
   public override void pieceLeftDropZone(int tower)
   {
     currentTower = -1;
     animationStartTime = Time.time;
+    currentPiece.showInFrontOfEverything();
   }
 
   public override void piecePickedUp(int weight)
   {
     currentPiece = pieces[weight];
+    currentPiece.showInFrontOfEverything();
     pieceStartPosition = currentPiece.transform.position;
   }
 
   public override void pieceWasDroppedOutsideOfDropZone()
   {
     currentPiece.transform.position = pieceStartPosition;
+    currentPiece.shownAsOnTopOfPillar();
     currentPiece = null;
   }
 
@@ -82,8 +86,10 @@ public class GraphicsHandler : GameInterfaceEventListener
   {
     GameBoardState state = application.getCurrentSceneState();
     currentPiece.transform.localPosition = getPositionAtNewTower(state, tower);
+    currentPiece.shownAsOnTopOfPillar();
     currentPiece = null;
     currentTower = -1;
+
   }
 
   public void Update()
