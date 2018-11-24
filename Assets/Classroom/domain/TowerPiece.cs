@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,6 +54,16 @@ namespace domain
     public void shownAsOnTopOfPillar() {
       backside.sortingOrder = 1;
       frontside.sortingOrder = 7 - weight;
+    }
+
+    public void slowBreathing()
+    {
+      GetComponent<Animator>().Play("idle");
+    }
+
+    public void excitedPickUp()
+    {
+      GetComponent<Animator>().Play("grabbed");
     }
   }
 }

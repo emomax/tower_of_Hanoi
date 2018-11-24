@@ -72,6 +72,7 @@ public class GraphicsHandler : GameInterfaceEventListener
   {
     currentPiece = pieces[weight];
     currentPiece.showInFrontOfEverything();
+    currentPiece.excitedPickUp();
     pieceStartPosition = currentPiece.transform.position;
   }
 
@@ -87,6 +88,7 @@ public class GraphicsHandler : GameInterfaceEventListener
     GameBoardState state = application.getCurrentSceneState();
     currentPiece.transform.localPosition = getPositionAtNewTower(state, tower);
     currentPiece.shownAsOnTopOfPillar();
+    currentPiece.slowBreathing();
     currentPiece = null;
     currentTower = -1;
 
