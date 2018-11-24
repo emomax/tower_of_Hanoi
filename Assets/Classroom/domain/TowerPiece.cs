@@ -65,5 +65,10 @@ namespace domain
     {
       GetComponent<Animator>().Play("grabbed");
     }
+
+    public void wiggle()
+    {
+      GetComponent<Animator>().Play("wiggle");
+    }
   }
 }

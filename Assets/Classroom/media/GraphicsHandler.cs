@@ -51,7 +51,7 @@ public class GraphicsHandler : GameInterfaceEventListener
 
   public override void pieceCouldNotBeMoved(int weight)
   {
-    // TODO wiggle clicked piece;
+    pieces[weight].wiggle();
   }
 
   public override void pieceHoveredDropZone(int tower)
