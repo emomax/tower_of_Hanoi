@@ -15,6 +15,8 @@ public class GraphicsHandler : GameInterfaceEventListener
 
   TowerPiece currentPiece;
 
+  private float animationStartTime;
+
   private Vector2 pieceStartPosition;
   private List<TowerPiece> pieces;
 
@@ -55,11 +57,13 @@ public class GraphicsHandler : GameInterfaceEventListener
   public override void pieceHoveredDropZone(int tower)
   {
     currentTower = tower;
+    animationStartTime = Time.time;
   }
 
   public override void pieceLeftDropZone(int tower)
   {
     currentTower = -1;
+    animationStartTime = Time.time;
   }
 
   public override void piecePickedUp(int weight)
@@ -79,22 +83,33 @@ public class GraphicsHandler : GameInterfaceEventListener
     GameBoardState state = application.getCurrentSceneState();
     currentPiece.transform.localPosition = getPositionAtNewTower(state, tower);
     currentPiece = null;
-    // TODO
+    currentTower = -1;
   }
 
   public void Update()
   {
     if (currentPiece != null)
     {
+      float animationDuration = 0.3f;
+
       if (currentTower != -1) {
-        currentPiece.transform.localPosition = dropZonePosition[currentTower];
+        currentPiece.transform.localPosition = getTweenedPosition(currentPiece.transform.localPosition, dropZonePosition[currentTower], animationDuration);
       }
       else if (Input.GetMouseButton(0))
       {
-        Vector2 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        currentPiece.transform.position = newPosition;
+        Vector2 goalDestination = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        currentPiece.transform.position = getTweenedPosition(currentPiece.transform.position, goalDestination, animationDuration);
       }
     }
+  }
+
+  private Vector2 getTweenedPosition(Vector2 startPosition, Vector2 goalPosition, float animationDuration)
+  {
+    float animationTimePassed = (Time.time - animationStartTime) / animationDuration;
+    float smoothX = Mathf.SmoothStep(startPosition.x, goalPosition.x, animationTimePassed);
+    float smoothY = Mathf.SmoothStep(startPosition.y, goalPosition.y, animationTimePassed);
+
+    return new Vector2(smoothX, smoothY);
   }
 
   private Vector2 getPositionAtNewTower(GameBoardState state, int tower) {
