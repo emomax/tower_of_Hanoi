@@ -50,11 +50,6 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     }
   }
 
-  public void enteredDropZoneForTower(int towerIndex)
-  {
-    currentTowerIndex = towerIndex;
-  }
-
   public void releaseCurrentInput()
   {
     if (currentTowerIndex != -1)
@@ -78,6 +73,16 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
         listener.pieceWasDroppedOutsideOfDropZone();
       }
     }
+  }
+
+  public void enteredDropZoneForTower(int towerIndex)
+  {
+    currentTowerIndex = towerIndex;
+  }
+
+  public void leftDropZone()
+  {
+    currentTowerIndex = -1;
   }
 
   private bool currentPieceIsMovable(int weight, GameBoardState currentState)

@@ -5,6 +5,8 @@ using UnityEngine;
 public interface InputSubscriber
 {
   void touchedPiece(int weight);
-  void enteredDropZoneForTower(int towerIndex);
   void releaseCurrentInput();
+
+  void enteredDropZoneForTower(int towerIndex);
+  void leftDropZone();
 }
