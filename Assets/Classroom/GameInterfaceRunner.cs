@@ -56,8 +56,15 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     {
       bool couldPlacePiece = application.putDown(currentTowerIndex);
 
-      if (!couldPlacePiece)
+      if (couldPlacePiece)
       {
+
+        foreach (GameInterfaceEventListener listener in listeners)
+        {
+          listener.pieceWasPlacedAtTower(currentTowerIndex);
+        }
+      }
+      else {
         application.putDown(lastTowerIndex);
         currentTowerIndex = lastTowerIndex;
 
@@ -65,11 +72,6 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
         {
           listener.pieceCouldNotBePlaced(lastTowerIndex);
         }
-      }
-
-      foreach (GameInterfaceEventListener listener in listeners)
-      {
-        listener.pieceWasPlacedAtTower(currentTowerIndex);
       }
 
       currentTowerIndex = -1;

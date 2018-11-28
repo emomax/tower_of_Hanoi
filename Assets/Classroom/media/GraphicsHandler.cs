@@ -11,6 +11,7 @@ public class GraphicsHandler : GameInterfaceEventListener
   [SerializeField] private TowerPiece biggest;
 
   [SerializeField] private GameObject dustFromFallingParticles;
+  [SerializeField] private GameObject smokePuff;
 
   // In order to find new positions
   [SerializeField] private TowerApplication application;
@@ -80,34 +81,68 @@ public class GraphicsHandler : GameInterfaceEventListener
 
   public override void pieceWasDroppedOutsideOfDropZone()
   {
+    Vector2 positionWherePieceWasDropped = new Vector2(currentPiece.transform.position.x,
+                                                      currentPiece.transform.position.y);
+
+    Instantiate(smokePuff,
+                positionWherePieceWasDropped,
+                currentPiece.transform.rotation);
+
+    Instantiate(smokePuff,
+                currentPiece.transform.position,
+                currentPiece.transform.rotation,
+                currentPiece.transform);
+
     currentPiece.transform.position = pieceStartPosition;
     currentPiece.shownAsOnTopOfPillar();
     currentPiece.slowBreathing();
     currentPiece = null;
   }
 
+  public override void pieceCouldNotBePlaced(int currentTowerIndex)
+  {
+    Vector2 positionWherePieceWasDropped = new Vector2(currentPiece.transform.position.x,
+                                                      currentPiece.transform.position.y);
+
+    Instantiate(smokePuff,
+                positionWherePieceWasDropped,
+                currentPiece.transform.rotation);
+
+    Instantiate(smokePuff,
+            currentPiece.transform.position,
+            currentPiece.transform.rotation,
+            currentPiece.transform);
+
+    currentPiece.transform.position = pieceStartPosition;
+    currentPiece.shownAsOnTopOfPillar();
+    currentPiece.slowBreathing();
+    currentPiece = null;
+    currentTower = -1;
+  }
+
   public override void pieceWasPlacedAtTower(int tower)
   {
     GameBoardState state = application.getCurrentSceneState();
-
-    Vector2 newPosition = getPositionAtNewTower(state, tower);
-    Debug.Log(newPosition + " : " + pieceStartPosition);
-    bool pieceChangedTower = !pieceStartPosition.Equals(newPosition);
-
-    currentPiece.transform.localPosition = newPosition;
+    currentPiece.transform.localPosition = getPositionAtNewTower(state, tower);
     currentPiece.shownAsOnTopOfPillar();
     currentPiece.slowBreathing();
 
-    if (pieceChangedTower)
+    bool pieceChangedTower = (currentTower != -1);
+    if (pieceChangedTower) // We fell down from dropzone
     {
-      Debug.Log("Spawn dust!");
+      Debug.Log("Changed tower, show particles! ");
       Instantiate(dustFromFallingParticles,
                   currentPiece.transform.position,
                   currentPiece.transform.rotation,
                   currentPiece.transform);
     }
-    else {
-      Debug.Log("Don't spawn dust..");
+    else
+    {
+      Debug.Log("Went back, show smoke! ");
+      Instantiate(smokePuff,
+            currentPiece.transform.position,
+            currentPiece.transform.rotation,
+            currentPiece.transform);
     }
 
     currentPiece = null;
@@ -147,10 +182,5 @@ public class GraphicsHandler : GameInterfaceEventListener
     const int PIECE_HEIGHT = 65;
 
     return new Vector2(dropZonePosition[tower].x, -120 + (PIECE_HEIGHT * (numberOfPieces - 1)));
-  }
-
-  public override void pieceCouldNotBePlaced(int currentTowerIndex)
-  {
-    // Play smoke poof? Aggrevated lower pieces?
   }
 }
