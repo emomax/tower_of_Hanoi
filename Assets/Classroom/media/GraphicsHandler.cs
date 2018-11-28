@@ -41,7 +41,7 @@ namespace Media
       currentTower = -1;
       dropZonePosition = new List<Vector2>();
       dropZonePosition.Add(new Vector2(-246f, 214f));
-      dropZonePosition.Add(new Vector2(5f, 214f));
+      dropZonePosition.Add(new Vector2(2f, 214f));
       dropZonePosition.Add(new Vector2(246f, 214f));
     }
 
