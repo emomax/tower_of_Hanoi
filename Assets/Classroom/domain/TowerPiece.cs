@@ -10,6 +10,7 @@ namespace domain
     [SerializeField] private int weight;
     [SerializeField] private SpriteRenderer backside;
     [SerializeField] private SpriteRenderer frontside;
+    [SerializeField] private SpriteRenderer face;
 
     public TowerPiece(int weight) {
       this.weight = weight;
@@ -43,17 +44,19 @@ namespace domain
     public void showInFrontOfEverything() {
       backside.sortingOrder += 10;
       frontside.sortingOrder += 10;
+      face.sortingOrder += 10;
     }
 
     /* Background has order 0, pillars 2 and thusly
      * the backside have the order 1.
-     * The magic-number 7 is for layer 3 + number of
-     * tower pieces available - the "lighter" the piece,
+     * The magic-number 10 is for layer 3 + number of
+     * tower pieces available * 2 - the "lighter" the piece,
      * the higher render priority.
      */
     public void shownAsOnTopOfPillar() {
       backside.sortingOrder = 1;
-      frontside.sortingOrder = 7 - weight;
+      frontside.sortingOrder = 10 - weight;
+      face.sortingOrder = 10 - (weight - 1);
     }
 
     public void slowBreathing()
