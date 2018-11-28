@@ -115,7 +115,7 @@ public class GraphicsHandler : GameInterfaceEventListener
 
     currentPiece.transform.position = pieceStartPosition;
     currentPiece.shownAsOnTopOfPillar();
-    currentPiece.slowBreathing();
+    currentPiece.temporarilySad();
     currentPiece = null;
     currentTower = -1;
   }
