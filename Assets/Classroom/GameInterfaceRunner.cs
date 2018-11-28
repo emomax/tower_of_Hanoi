@@ -65,13 +65,13 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
         }
       }
       else {
-        application.putDown(lastTowerIndex);
-        currentTowerIndex = lastTowerIndex;
-
         foreach (GameInterfaceEventListener listener in listeners)
         {
-          listener.pieceCouldNotBePlaced(lastTowerIndex);
+          listener.pieceCouldNotBePlaced(currentTowerIndex);
         }
+
+        application.putDown(lastTowerIndex);
+        currentTowerIndex = lastTowerIndex;
       }
 
       currentTowerIndex = -1;

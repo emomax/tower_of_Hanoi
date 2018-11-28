@@ -131,7 +131,7 @@ public class GameInterfaceRunnerEndToEndTest
     genericListener.Received(1).piecePickedUp(0);
     genericListener.Received(1).piecePickedUp(1);
     genericListener.Received(1).pieceWasPlacedAtTower(1);
-    genericListener.Received(1).pieceWasPlacedAtTower(0);
+    genericListener.Received(1).pieceCouldNotBePlaced(1);
   }
 
   [Test]
