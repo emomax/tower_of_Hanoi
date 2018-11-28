@@ -42,6 +42,20 @@ namespace domain
       return pieces.Pop();
     }
 
+    public Tower Clone()
+    {
+      Stack<TowerPiece> piecesCopy = new Stack<TowerPiece>();
+      Tower clone = new Tower();
+
+      foreach (TowerPiece piece in pieces.Reverse())
+      {
+        clone.putPiece(new TowerPiece(piece.getWeight()));
+      }
+
+      return clone;
+    }
+
+    /* Returns true if other tower contains the same tower pieces of same weight */
     public override bool Equals(object other)
     {
       Tower otherTower = other as Tower;
@@ -63,6 +77,30 @@ namespace domain
       return true;
     }
 
+    public override string ToString()
+    {
+      string items = "";
+
+      foreach (TowerPiece piece in pieces)
+      {
+        items += piece.ToString() + " ";
+      }
+
+      return "[ " + items + "]";
+    }
+
+    /* PUBLIC HELPERS */
+
+    public int getNumberOfPieces()
+    {
+      return pieces.Count;
+    }
+
+    public bool hasPieces()
+    {
+      return pieces.Count() > 0;
+    }
+
     public TowerPiece peekAtTopPiece()
     {
       return pieces.Peek();
@@ -70,43 +108,15 @@ namespace domain
 
     public bool hasPieceWithWeight(int weight)
     {
-      foreach (TowerPiece piece in pieces) {
-        if (piece.getWeight() == weight) {
+      foreach (TowerPiece piece in pieces)
+      {
+        if (piece.getWeight() == weight)
+        {
           return true;
         }
       }
 
       return false;
-    }
-
-    public override string ToString() {
-      string items = "";
-
-      foreach (TowerPiece piece in pieces) {
-        items += piece.ToString() + " ";
-      }
-
-      return "[ " + items + "]";
-    }
-
-    public int getNumberOfPieces()
-    {
-      return pieces.Count;
-    }
-
-    public Tower Clone() {
-      Stack<TowerPiece> piecesCopy = new Stack<TowerPiece>();
-      Tower clone = new Tower();
-
-      foreach (TowerPiece piece in pieces.Reverse()) {
-        clone.putPiece(new TowerPiece(piece.getWeight()));
-      }
-
-      return clone;
-    }
-
-    public bool hasPieces() {
-      return pieces.Count() > 0;
     }
   }
 }
