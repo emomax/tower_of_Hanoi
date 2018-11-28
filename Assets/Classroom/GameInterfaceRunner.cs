@@ -22,6 +22,7 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
   {
     listeners = new List<GameInterfaceEventListener>();
 
+    // For some reason, Unity ignores default values so we re-set them upon waking up.
     currentTowerIndex = -1;
     lastTowerIndex = -1;
   }
@@ -44,51 +45,55 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     }
   }
 
-  // TODO this is .. very long. Break this up.
+  /* This means either that user stopped touching, or
+   * that the left mouse button was released. Either way,
+   * we are interested as we might be holding stuff.
+   */
   public void releaseCurrentInput()
   {
     if (!currentlyHoldingPiece)
-    { // Didn't have any piece attached to pointer
+    { // Didn't have any piece attached to pointer - nothing to do
       return;
     }
 
-    if (currentTowerIndex != -1)
+    bool hoveringOverDropzone = currentTowerIndex != -1;
+    if (hoveringOverDropzone)
     {
-      bool couldPlacePiece = application.putDown(currentTowerIndex);
-
-      if (couldPlacePiece)
-      {
-
-        foreach (GameInterfaceEventListener listener in listeners)
-        {
-          listener.pieceWasPlacedAtTower(currentTowerIndex);
-        }
-      }
-      else {
-        foreach (GameInterfaceEventListener listener in listeners)
-        {
-          listener.pieceCouldNotBePlaced(currentTowerIndex);
-        }
-
-        application.putDown(lastTowerIndex);
-        currentTowerIndex = lastTowerIndex;
-      }
-
-      currentTowerIndex = -1;
-      lastTowerIndex = -1;
+      placeTowerPiece();
     }
     else
     {
-      application.putDown(lastTowerIndex);
-      lastTowerIndex = -1;
-
-      foreach (GameInterfaceEventListener listener in listeners)
-      {
-        listener.pieceWasDroppedOutsideOfDropZone();
-      }
+      returnTowerPieceToLastTower();
     }
 
+    currentTowerIndex = -1;
+    lastTowerIndex = -1;
     currentlyHoldingPiece = false;
+  }
+
+  private void placeTowerPiece()
+  {
+    bool couldPlacePiece = application.putDown(currentTowerIndex);
+
+    if (couldPlacePiece)
+    {
+      publishPiecePlacedAtTowerEvent(currentTowerIndex);
+    }
+    else
+    {
+      publishPieceCouldNotBePlacedEvent(currentTowerIndex);
+      application.putDown(lastTowerIndex);
+    }
+  }
+
+  private void returnTowerPieceToLastTower()
+  {
+    application.putDown(lastTowerIndex);
+
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.pieceWasDroppedOutsideOfDropZone();
+    }
   }
 
   public void enteredDropZoneForTower(int towerIndex)
@@ -97,10 +102,7 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
 
     if (currentlyHoldingPiece)
     {
-      foreach (GameInterfaceEventListener listener in listeners)
-      {
-        listener.pieceHoveredDropZone(towerIndex);
-      }
+      publishPieceEnteredDropZoneEvent(towerIndex);
     }
   }
 
@@ -108,12 +110,34 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
   {
     if (currentlyHoldingPiece)
     {
-      foreach (GameInterfaceEventListener listener in listeners)
-      {
-        listener.pieceLeftDropZone(currentTowerIndex);
-      }
+      publishPieceLeftDropZoneEvent(currentTowerIndex);
+
     }
     currentTowerIndex = -1;
+  }
+
+
+  /* HELPER METHODS */
+
+  /* This will return false if there are other pieces on top of this piece */
+  private bool currentPieceIsMovable(int weight, GameBoardState currentState)
+  {
+    return currentState.canMovePieceWithWeight(weight);
+  }
+
+  private int getTowerIndexForPiece(int weight, GameBoardState currentState)
+  {
+    return currentState.getTowerIndexForPiece(weight);
+  }
+
+  /* EVENT HANDLING */
+
+  private void publishPickedUpEvent(int weight)
+  {
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.piecePickedUp(weight);
+    }
   }
 
   private void publishCouldNotPickUpPieceEvent(int weight)
@@ -124,22 +148,36 @@ public class GameInterfaceRunner : MonoBehaviour, InputSubscriber
     }
   }
 
-  private void publishPickedUpEvent(int weight)
+  private void publishPiecePlacedAtTowerEvent(int towerIndex)
   {
     foreach (GameInterfaceEventListener listener in listeners)
     {
-      listener.piecePickedUp(weight);
+      listener.pieceWasPlacedAtTower(towerIndex);
     }
   }
 
-  private bool currentPieceIsMovable(int weight, GameBoardState currentState)
+  private void publishPieceCouldNotBePlacedEvent(int currentTowerIndex)
   {
-    return currentState.canMovePieceWithWeight(weight);
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.pieceCouldNotBePlaced(currentTowerIndex);
+    }
   }
 
-  private int getTowerIndexForPiece(int weight, GameBoardState currentState)
+  private void publishPieceEnteredDropZoneEvent(int towerIndex)
   {
-    return currentState.getTowerIndexForPiece(weight);
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.pieceHoveredDropZone(towerIndex);
+    }
+  }
+
+  private void publishPieceLeftDropZoneEvent(int abandonedTower)
+  {
+    foreach (GameInterfaceEventListener listener in listeners)
+    {
+      listener.pieceLeftDropZone(abandonedTower);
+    }
   }
 
   public void registerListener(GameInterfaceEventListener listener)
