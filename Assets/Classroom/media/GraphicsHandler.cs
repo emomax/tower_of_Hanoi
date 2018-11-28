@@ -10,6 +10,8 @@ public class GraphicsHandler : GameInterfaceEventListener
   [SerializeField] private TowerPiece big;
   [SerializeField] private TowerPiece biggest;
 
+  [SerializeField] private GameObject dustFromFallingParticles;
+
   // In order to find new positions
   [SerializeField] private TowerApplication application;
 
@@ -87,9 +89,27 @@ public class GraphicsHandler : GameInterfaceEventListener
   public override void pieceWasPlacedAtTower(int tower)
   {
     GameBoardState state = application.getCurrentSceneState();
-    currentPiece.transform.localPosition = getPositionAtNewTower(state, tower);
+
+    Vector2 newPosition = getPositionAtNewTower(state, tower);
+    Debug.Log(newPosition + " : " + pieceStartPosition);
+    bool pieceChangedTower = !pieceStartPosition.Equals(newPosition);
+
+    currentPiece.transform.localPosition = newPosition;
     currentPiece.shownAsOnTopOfPillar();
     currentPiece.slowBreathing();
+
+    if (pieceChangedTower)
+    {
+      Debug.Log("Spawn dust!");
+      Instantiate(dustFromFallingParticles,
+                  currentPiece.transform.position,
+                  currentPiece.transform.rotation,
+                  currentPiece.transform);
+    }
+    else {
+      Debug.Log("Don't spawn dust..");
+    }
+
     currentPiece = null;
     currentTower = -1;
   }
@@ -100,7 +120,8 @@ public class GraphicsHandler : GameInterfaceEventListener
     {
       float animationDuration = 0.3f;
 
-      if (currentTower != -1) {
+      if (currentTower != -1)
+      {
         currentPiece.transform.localPosition = getTweenedPosition(currentPiece.transform.localPosition, dropZonePosition[currentTower], animationDuration);
       }
       else if (Input.GetMouseButton(0))
@@ -120,7 +141,8 @@ public class GraphicsHandler : GameInterfaceEventListener
     return new Vector2(smoothX, smoothY);
   }
 
-  private Vector2 getPositionAtNewTower(GameBoardState state, int tower) {
+  private Vector2 getPositionAtNewTower(GameBoardState state, int tower)
+  {
     int numberOfPieces = state.getNumberOfPiecesForTower(tower);
     const int PIECE_HEIGHT = 65;
 
