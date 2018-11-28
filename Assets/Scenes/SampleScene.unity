@@ -1823,6 +1823,9 @@ MonoBehaviour:
   small: {fileID: 1407451063}
   big: {fileID: 822419291}
   biggest: {fileID: 737619419}
+  dustFromFallingParticles: {fileID: 1582319506667290, guid: c0d7b8e209f88464a8f57f9d79930a24,
+    type: 2}
+  smokePuff: {fileID: 1794818017935966, guid: 76dfec233e77a4d3f915bcef5a477fe6, type: 2}
   application: {fileID: 2067184390}
 --- !u!1 &1324545391
 GameObject:
