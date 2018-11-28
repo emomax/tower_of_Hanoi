@@ -1943,8 +1943,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 1663412853}
   runner: {fileID: 13277450}
-  graphicsHandler: {fileID: 1236860215}
-  soundHandler: {fileID: 654260588}
+  gameInterfaceListeners:
+  - {fileID: 1236860215}
+  - {fileID: 654260588}
 --- !u!1 &1337335121
 GameObject:
   m_ObjectHideFlags: 0

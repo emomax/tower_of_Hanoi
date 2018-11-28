@@ -11,16 +11,13 @@ public class GameRunner : MonoBehaviour {
   [SerializeField] private InputManager input;
   [SerializeField] private GameInterfaceRunner runner;
 
-  [SerializeField] private GameInterfaceEventListener graphicsHandler;
-  [SerializeField] private GameInterfaceEventListener soundHandler;
+  [SerializeField] private List<GameInterfaceEventListener> gameInterfaceListeners;
 
   public GameRunner(InputManager input, GameInterfaceRunner runner,
-                    GameInterfaceEventListener graphicsHandler,
-                    GameInterfaceEventListener soundHandler) {
+                    List<GameInterfaceEventListener> listeners) {
     this.input = input;
     this.runner = runner;
-    this.graphicsHandler = graphicsHandler;
-    this.soundHandler = soundHandler;
+    this.gameInterfaceListeners = listeners;
 
     registerListeners();
   }
@@ -31,8 +28,9 @@ public class GameRunner : MonoBehaviour {
 
   private void registerListeners()
   {
-    runner.registerListener(graphicsHandler);
-    runner.registerListener(soundHandler);
+    foreach (var listener in gameInterfaceListeners) {
+      runner.registerListener(listener);
+    }
 
     input.registerListener(runner);
   }
