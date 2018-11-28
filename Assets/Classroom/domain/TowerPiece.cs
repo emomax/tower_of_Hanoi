@@ -8,6 +8,12 @@ namespace domain
   public class TowerPiece : MonoBehaviour
   {
     [SerializeField] private int weight;
+
+    /* Seeing as these are only use for graphics, and given
+       chosen the domain model these won't interfere and doesn't
+       need intialization in the constructor. This could however
+       be split up to separate concerns of logic and looks,
+       but doesn't hurt too much, so I'll keep it for now. */
     [SerializeField] private SpriteRenderer backside;
     [SerializeField] private SpriteRenderer frontside;
     [SerializeField] private SpriteRenderer face;
@@ -29,18 +35,6 @@ namespace domain
       return weight == otherPiece.weight;
     }
 
-    public override string ToString()
-    {
-      return "" + weight;
-    }
-
-    /* Seeing as we know that there are not more than
-     * 6 layers - 1 for background, 1 for pillars, and
-     * 1 for each of the pieces, this way we really put
-     * render current piece ontop of everything.
-     * Without this, it looks wonky as the backside is
-     * behind the pillar..
-     *  */
     public void showInFrontOfEverything() {
       backside.sortingOrder += 10;
       frontside.sortingOrder += 10;
@@ -53,11 +47,18 @@ namespace domain
      * tower pieces available * 2 - the "lighter" the piece,
      * the higher render priority.
      */
-    public void shownAsOnTopOfPillar() {
+    public void shownAsOnTopPieceOfPillar() {
       backside.sortingOrder = 1;
       frontside.sortingOrder = 10 - weight;
       face.sortingOrder = 10 - (weight - 1);
     }
+
+    public override string ToString()
+    {
+      return "" + weight;
+    }
+
+    /* GRAPHICAL HELPERS */
 
     public void slowBreathing()
     {
