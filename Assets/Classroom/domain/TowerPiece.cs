@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace domain
 {
+  /* One of the parts of a tower in the application
+     It is important to understand that there will only
+     exist one piece per weight, from
+     (0 -> (number of total pieces - 1))
+
+     They could therefore, in practice, be used as IDs.
+     */
   public class TowerPiece : MonoBehaviour
   {
     [SerializeField] private int weight;
