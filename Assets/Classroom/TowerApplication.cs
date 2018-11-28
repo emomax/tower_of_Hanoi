@@ -8,7 +8,7 @@ public class TowerApplication : MonoBehaviour {
 
   List<Tower> towers;
 
-  TowerPiece currentlyHeldPiece = null; // TODO Maybe make a domain representation?
+  TowerPiece currentlyHeldPiece = null;
   private const int DEFAULT_SIZE = 4;
 
   public TowerApplication() : this(DEFAULT_SIZE) { }
