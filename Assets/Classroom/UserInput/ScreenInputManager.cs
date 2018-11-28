@@ -5,14 +5,11 @@ using UnityEngine;
 
 namespace UserInput
 {
+  /* This is the actual implementation that communicates the user input
+     and notifies the listeners of registered input events */
   public class ScreenInputManager : InputManager
   {
     [SerializeField] private List<InputSubscriber> subscribers = new List<InputSubscriber>();
-
-    // Unity game entry point for this class
-    public void Start()
-    {
-    }
 
     public override void enteredDropZoneForTower(int towerIndex)
     {
