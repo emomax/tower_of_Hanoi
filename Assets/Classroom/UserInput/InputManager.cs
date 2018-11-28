@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UserInput;
 using UnityEngine;
 
 /* This is abstract to avoid custom serializing of interfaces -
+   and still be able to use it in the Unity Editor.
    It is however an interface in all but type */
 public abstract class InputManager : MonoBehaviour
 {

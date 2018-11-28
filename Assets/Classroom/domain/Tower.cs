@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace domain
+namespace Domain
 {
   public class Tower : MonoBehaviour
   {

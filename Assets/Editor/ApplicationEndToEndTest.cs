@@ -3,8 +3,9 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 using System;
-using domain;
+using Domain;
 using System.Collections.Generic;
+using State;
 
 public class ApplicationEndToEndTest
 {

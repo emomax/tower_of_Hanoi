@@ -2,7 +2,7 @@
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
-using domain;
+using Domain;
 
 public class TowerTest
 {

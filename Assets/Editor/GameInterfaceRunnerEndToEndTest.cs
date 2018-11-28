@@ -4,6 +4,9 @@ using NUnit.Framework;
 using System.Collections;
 using NSubstitute;
 using System.Collections.Generic;
+using State;
+using Event;
+using UserInput;
 
 public class GameInterfaceRunnerEndToEndTest
 {

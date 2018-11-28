@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Event;
 using UnityEngine;
 
+/* The entry point for the game. Here we set up
+   the rule engine (application) and the interface
+   runner, with respective top-level listeners */
 public class GameRunner : MonoBehaviour {
   [SerializeField] private InputManager input;
   [SerializeField] private GameInterfaceRunner runner;

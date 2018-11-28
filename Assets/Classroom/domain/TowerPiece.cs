@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace domain
+namespace Domain
 {
   /* One of the parts of a tower in the application
      It is important to understand that there will only

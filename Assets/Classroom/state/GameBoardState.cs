@@ -1,71 +1,76 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using domain;
+using Domain;
 using UnityEngine;
 
-public class GameBoardState : MonoBehaviour
+namespace State
 {
-  private List<Tower> towers;
-
-  public GameBoardState(List<Tower> towers)
+  public class GameBoardState : MonoBehaviour
   {
-    this.towers = towers;
-  }
+    private List<Tower> towers;
 
-  public override bool Equals(object other)
-  {
-    GameBoardState otherState = other as GameBoardState;
-
-    for (int i = 0; i < towers.Count; i++)
+    public GameBoardState(List<Tower> towers)
     {
-      if (!towers[i].Equals(otherState.towers[i]))
+      this.towers = towers;
+    }
+
+    public override bool Equals(object other)
+    {
+      GameBoardState otherState = other as GameBoardState;
+
+      for (int i = 0; i < towers.Count; i++)
       {
-        return false;
+        if (!towers[i].Equals(otherState.towers[i]))
+        {
+          return false;
+        }
       }
+
+      return true;
     }
 
-    return true;
-  }
-
-  public override string ToString()
-  {
-    string towersOutput = "";
-
-    foreach (Tower tower in towers)
+    public override string ToString()
     {
-      towersOutput += tower.ToString() + " ";
-    }
+      string towersOutput = "";
 
-    return "{ " + towersOutput + "}";
-  }
-
-  public bool canMovePieceWithWeight(int weight)
-  {
-    foreach (Tower tower in towers) {
-      if (tower.hasPieces() && tower.peekAtTopPiece().getWeight() == weight) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  public int getTowerIndexForPiece(int weight)
-  {
-    for (int i = 0; i < towers.Count; i++)
-    {
-      if (towers[i].hasPieceWithWeight(weight))
+      foreach (Tower tower in towers)
       {
-        return i;
+        towersOutput += tower.ToString() + " ";
       }
+
+      return "{ " + towersOutput + "}";
     }
 
-    throw new UnityException("Piece with weight '" + weight + "' did not exist. WEIRD.");
-  }
+    public bool canMovePieceWithWeight(int weight)
+    {
+      foreach (Tower tower in towers)
+      {
+        if (tower.hasPieces() && tower.peekAtTopPiece().getWeight() == weight)
+        {
+          return true;
+        }
+      }
 
-  public int getNumberOfPiecesForTower(int tower)
-  {
-    return towers[tower].getNumberOfPieces();
+      return false;
+    }
+
+    public int getTowerIndexForPiece(int weight)
+    {
+      for (int i = 0; i < towers.Count; i++)
+      {
+        if (towers[i].hasPieceWithWeight(weight))
+        {
+          return i;
+        }
+      }
+
+      throw new UnityException("Piece with weight '" + weight + "' did not exist. WEIRD.");
+    }
+
+    public int getNumberOfPiecesForTower(int tower)
+    {
+      return towers[tower].getNumberOfPieces();
+    }
   }
 }
