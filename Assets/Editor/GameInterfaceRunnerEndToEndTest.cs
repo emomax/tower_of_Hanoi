@@ -10,16 +10,6 @@ using UserInput;
 
 public class GameInterfaceRunnerEndToEndTest
 {
-  TowerApplication application;
-  GameBoardState startState;
-
-  [SetUp]
-  public void before()
-  {
-    application = new TowerApplication();
-    startState = application.getCurrentSceneState();
-  }
-
   [Test]
   public void GameInterfaceRunnerSimplePasses()
   {
@@ -43,8 +33,7 @@ public class GameInterfaceRunnerEndToEndTest
     GameInterfaceEventListener genericListener = Substitute.For<GameInterfaceEventListener>();
 
     InputManager input = new MockInputManager();
-    TowerApplication application = Substitute.For<TowerApplication>();
-    application.getCurrentSceneState().Returns(startState);
+    TowerApplication application = new TowerApplication();
 
     GameInterfaceRunner interfaceRunner = new GameInterfaceRunner(application);
     interfaceRunner.registerListener(genericListener);
@@ -52,7 +41,6 @@ public class GameInterfaceRunnerEndToEndTest
     input.registerListener(interfaceRunner);
     input.touchPiece(0);
 
-    application.Received().pickUp(0);
     genericListener.Received().piecePickedUp(0);
   }
 
