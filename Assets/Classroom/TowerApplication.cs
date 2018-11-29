@@ -17,7 +17,6 @@ public class TowerApplication : MonoBehaviour {
   public TowerApplication(int numberOfTowerPieces) {
     towers = new List<Tower>();
 
-    // TODO Clarify these loops
     for (int i = 0; i < numberOfTowerPieces - 1; i++) {
       towers.Add(new Tower());
     }
