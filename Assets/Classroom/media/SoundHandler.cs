@@ -7,14 +7,34 @@ namespace Media
 {
   public class SoundHandler : GameInterfaceEventListener
   {
+    [SerializeField] private AudioClip backgroundMusic;
+
+    [SerializeField] private AudioClip towerPiecePlacedAtTower;
+    [SerializeField] private AudioClip towerPiecePlacedAtTowerAlternative2;
+    [SerializeField] private AudioClip towerPiecePlacedAtTowerAlternative3;
+
+    [SerializeField] private AudioClip towerPiecePickedUp;
+    [SerializeField] private AudioClip towerPieceDropped;
+    [SerializeField] private AudioClip towerPieceFailedToBePickedUp;
+
+    [SerializeField] private AudioSource backgroundSource;
+    [SerializeField] private AudioSource soundEffectsSource;
+
+    public void Start() {
+      backgroundSource.loop = true;
+      backgroundSource.clip = backgroundMusic;
+      backgroundSource.volume = 0.9f;
+      backgroundSource.Play();
+    }
+
     public override void pieceCouldNotBeMoved(int weight)
     {
-      // Play denied sound
+      soundEffectsSource.PlayOneShot(towerPieceFailedToBePickedUp, 0.6f);
     }
 
     public override void pieceCouldNotBePlaced(int currentTowerIndex)
     {
-      // Denied, in a grumpy way!
+      soundEffectsSource.PlayOneShot(towerPieceDropped);
     }
 
     public override void pieceHoveredDropZone(int tower)
@@ -29,17 +49,33 @@ namespace Media
 
     public override void piecePickedUp(int weight)
     {
-      // Play happy picked up sound
+      soundEffectsSource.PlayOneShot(towerPiecePickedUp);
     }
 
     public override void pieceWasDroppedOutsideOfDropZone()
     {
-      // Play piece was lost sound
+      soundEffectsSource.PlayOneShot(towerPieceDropped);
     }
 
     public override void pieceWasPlacedAtTower(int tower)
     {
-      // Play piece was placed at tower
+      soundEffectsSource.PlayOneShot(towerPieceDropped);
+      soundEffectsSource.PlayOneShot(getRandomRinging(), 0.3f);
+    }
+
+    private AudioClip getRandomRinging() {
+      int randomVersion = Random.Range(0, 3);
+
+      switch (randomVersion) {
+        case 0:
+          return towerPiecePlacedAtTower;
+        case 1:
+          return towerPiecePlacedAtTowerAlternative2;
+        case 2:
+          return towerPiecePlacedAtTowerAlternative3;
+        default:
+          throw new UnityException("Unmapped sound! There are only 3 possible ones at this point!");
+      }
     }
   }
 }
